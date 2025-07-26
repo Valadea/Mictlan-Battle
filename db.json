@@ -1,0 +1,18 @@
+{
+  "battles": [
+    {
+      "id": 1753551769366,
+      "option1": {
+        "name": "北极熊",
+        "image": "/uploads/option1Image-1753551769359.jpg",
+        "votes": 0
+      },
+      "option2": {
+        "name": "空调",
+        "image": "/uploads/option2Image-1753551769361.jpg",
+        "votes": 0
+      },
+      "winner": null
+    }
+  ]
+}
