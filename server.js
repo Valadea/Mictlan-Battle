@@ -85,13 +85,6 @@ app.get('/api/data', (req, res) => {
 });
 
 
-    // 将活动标题和对战列表一起返回
-    res.json({
-        eventTitle: db.eventTitle,
-        battles: publicBattles
-    });
-});
-
 // POST /api/admin/event-title - 新增：管理员更新活动标题
 app.post('/api/admin/event-title', (req, res) => {
     const correctPassword = process.env.ADMIN_PASSWORD || "devpassword";
