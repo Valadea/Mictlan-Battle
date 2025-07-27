@@ -42,19 +42,23 @@ const writeDB = (data) => {
 // GET /api/data - 获取所有数据（对战列表+活动标题）
 // server.js (替换此部分)
 
+// server.js (请用这段代码完整替换原来的 GET /api/data 路由)
+
 app.get('/api/data', (req, res) => {
     const db = readDB();
-    const now = new Date();
-    let dbWasModified = false; // 标记数据库是否被修改
+    let dbWasModified = false;
 
-    // 遍历所有对战，检查是否需要“结算”
+    // ======================= 调试代码块 开始 =======================
+    console.log("\n--- 开始强制调试 ---");
     db.battles.forEach(battle => {
-        // 首先，确保 deadline 存在，且当前时间已超过截止时间
-        const isExpired = battle.deadline && (now > new Date(battle.deadline));
+        console.log(`[检查] 对战ID: ${battle.id}`);
+        console.log(`[检查] 数据库中的票数: ${battle.option1.name}(${battle.option1.votes}) vs ${battle.option2.name}(${battle.option2.votes})`);
+        console.log(`[检查] 数据库中的 winner 值: '${battle.winner}' (类型: ${typeof battle.winner})`);
 
-        // 如果已截止，并且胜者还未被记录（winner is null），则进行结算
-        if (isExpired && battle.winner === null) {
-            console.log(`结算对战 ID: ${battle.id}`); // 在服务器后台打印日志，方便调试
+        // 强制条件：只要胜者未定(winner 为 null)，就立即结算
+        if (battle.winner === null) {
+            console.log(`>>> 发现未结算对战，ID: ${battle.id}，将强制结算！`);
+            
             if (battle.option1.votes > battle.option2.votes) {
                 battle.winner = battle.option1.name;
             } else if (battle.option2.votes > battle.option1.votes) {
@@ -62,17 +66,20 @@ app.get('/api/data', (req, res) => {
             } else {
                 battle.winner = '平局';
             }
-            dbWasModified = true; // 标记需要将更新后的胜者信息写回文件
+            
+            console.log(`>>> 结算后的 winner 值变为: '${battle.winner}'`);
+            dbWasModified = true; // 标记数据库需要被更新
         }
     });
+    console.log("--- 强制调试结束 ---\n");
+    // ======================= 调试代码块 结束 =======================
 
-    // 如果在上面的循环中结算了任何对战，就将更新写回 db.json
     if (dbWasModified) {
-        console.log('检测到新的结算，正在更新 db.json...');
+        console.log('检测到强制结算，正在将更新写入 db.json...');
         writeDB(db);
+        console.log('db.json 更新完毕！');
     }
 
-    // 准备要发给客户端的公开数据（移除敏感信息）
     const publicBattles = db.battles.map(battle => {
         const { votedIPs, ...publicData } = battle;
         return publicData;
