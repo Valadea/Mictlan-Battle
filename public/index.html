@@ -27,14 +27,24 @@
     <form action="/api/admin/battles" method="POST" enctype="multipart/form-data">
         <h3>创建新的对战</h3>
         
-        <!-- 新增的密码字段 -->
         <input type="hidden" name="adminPassword" id="admin-password-input">
 
         <div class="form-group">
             <label for="option1Name">选项一 名称:</label>
             <input type="text" id="option1Name" name="option1Name" required>
         </div>
-        <!-- ... 其他表单字段 ... -->
+        <div class="form-group">
+            <label for="option1Image">选项一 图片:</label>
+            <input type="file" id="option1Image" name="option1Image" required>
+        </div>
+        <div class="form-group">
+            <label for="option2Name">选项二 名称:</label>
+            <input type="text" id="option2Name" name="option2Name" required>
+        </div>
+        <div class="form-group">
+            <label for="option2Image">选项二 图片:</label>
+            <input type="file" id="option2Image" name="option2Image" required>
+        </div>
         <button type="submit">创建对战</button>
     </form>
     </section>
