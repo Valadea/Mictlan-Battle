@@ -48,13 +48,28 @@ app.get('/api/data', (req, res) => {
         const battleDeadline = new Date(battle.deadline);
         const isExpired = now > battleDeadline;
 
+        // 创建一个 battle 的副本以进行修改
+        const battleData = { ...battle };
+
         if (isExpired) {
-            return battle;
+            // 对战已截止，此时根据最终票数决定胜者
+            if (battleData.option1.votes > battleData.option2.votes) {
+                battleData.winner = battleData.option1.name;
+            } else if (battleData.option2.votes > battleData.option1.votes) {
+                battleData.winner = battleData.option2.name;
+            } else {
+                battleData.winner = '平局';
+            }
         } else {
-            const { winner, ...rest } = battle;
-            return { ...rest, winner: null };
+            // 对战未截止，隐藏胜者信息
+            battleData.winner = null;
         }
+        
+        // 移除敏感信息后再返回
+        delete battleData.votedIPs;
+        return battleData;
     });
+
 
     // 将活动标题和对战列表一起返回
     res.json({
@@ -145,21 +160,15 @@ app.post('/api/battles/:id/vote', (req, res) => {
     if (!battle.votedIPs) battle.votedIPs = [];
     if (battle.votedIPs.includes(userIp)) return res.status(403).json({ error: '您已经投过票了！' });
 
-    if (option === 'option1' || option === 'option2') {
+     if (option === 'option1' || option === 'option2') {
         battle[option].votes++;
         battle.votedIPs.push(userIp);
 
-        if (battle.option1.votes > battle.option2.votes) {
-            battle.winner = battle.option1.name;
-        } else if (battle.option2.votes > battle.option1.votes) {
-            battle.winner = battle.option2.name;
-        } else {
-            battle.winner = '平局';
-        }
+        // 删除了判断胜负的逻辑
 
         writeDB(db);
-        const { winner, ...rest } = battle;
-        res.json(rest);
+        // 为了安全，我们返回一个不包含敏感信息（如IP列表）的对象
+        res.json({ message: '投票成功' });
     } else {
         res.status(400).json({ error: '选项无效' });
     }
