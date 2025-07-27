@@ -42,23 +42,19 @@ const writeDB = (data) => {
 // GET /api/data - 获取所有数据（对战列表+活动标题）
 // server.js (替换此部分)
 
-// server.js (请用这段代码完整替换原来的 GET /api/data 路由)
-
 app.get('/api/data', (req, res) => {
     const db = readDB();
-    let dbWasModified = false;
+    const now = new Date();
+    let dbWasModified = false; // 标记数据库是否被修改
 
-    // ======================= 调试代码块 开始 =======================
-    console.log("\n--- 开始强制调试 ---");
+    // 遍历所有对战，检查是否需要“结算”
     db.battles.forEach(battle => {
-        console.log(`[检查] 对战ID: ${battle.id}`);
-        console.log(`[检查] 数据库中的票数: ${battle.option1.name}(${battle.option1.votes}) vs ${battle.option2.name}(${battle.option2.votes})`);
-        console.log(`[检查] 数据库中的 winner 值: '${battle.winner}' (类型: ${typeof battle.winner})`);
+        // 首先，确保 deadline 存在，且当前时间已超过截止时间
+        const isExpired = battle.deadline && (now > new Date(battle.deadline));
 
-        // 强制条件：只要胜者未定(winner 为 null)，就立即结算
-        if (battle.winner === null) {
-            console.log(`>>> 发现未结算对战，ID: ${battle.id}，将强制结算！`);
-            
+        // 如果已截止，并且胜者还未被记录（winner is null），则进行结算
+        if (isExpired && battle.winner === null) {
+            console.log(`结算对战 ID: ${battle.id}`); // 在服务器后台打印日志，方便调试
             if (battle.option1.votes > battle.option2.votes) {
                 battle.winner = battle.option1.name;
             } else if (battle.option2.votes > battle.option1.votes) {
@@ -66,20 +62,17 @@ app.get('/api/data', (req, res) => {
             } else {
                 battle.winner = '平局';
             }
-            
-            console.log(`>>> 结算后的 winner 值变为: '${battle.winner}'`);
-            dbWasModified = true; // 标记数据库需要被更新
+            dbWasModified = true; // 标记需要将更新后的胜者信息写回文件
         }
     });
-    console.log("--- 强制调试结束 ---\n");
-    // ======================= 调试代码块 结束 =======================
 
+    // 如果在上面的循环中结算了任何对战，就将更新写回 db.json
     if (dbWasModified) {
-        console.log('检测到强制结算，正在将更新写入 db.json...');
+        console.log('检测到新的结算，正在更新 db.json...');
         writeDB(db);
-        console.log('db.json 更新完毕！');
     }
 
+    // 准备要发给客户端的公开数据（移除敏感信息）
     const publicBattles = db.battles.map(battle => {
         const { votedIPs, ...publicData } = battle;
         return publicData;
@@ -159,33 +152,43 @@ app.delete('/api/admin/battles/:id', (req, res) => {
 });
 
 // POST /api/battles/:id/vote
+
 app.post('/api/battles/:id/vote', (req, res) => {
+    // ======================= 投票接口调试日志 开始 =======================
+    console.log("\n<<<<<<<<<< 投票接口被触发 >>>>>>>>>>");
     const battleId = parseInt(req.params.id);
     const { option } = req.body;
-    const userIp = req.ip;
+    console.log(`[投票日志] 收到对战ID: ${battleId} 的投票请求`);
+    console.log(`[投票日志] 投票选项: ${option}`);
 
     const db = readDB();
     const battle = db.battles.find(b => b.id === battleId);
 
-    if (!battle) return res.status(404).json({ error: '未找到对战' });
+    if (!battle) {
+        console.error("[投票日志] 错误：未找到ID为 " + battleId + " 的对战！");
+        return res.status(404).json({ error: '未找到对战' });
+    }
     
-    if (new Date() > new Date(battle.deadline)) return res.status(403).json({ error: '投票已截止！' });
+    // 暂时忽略截止时间，确保能投票
+    // if (new Date() > new Date(battle.deadline)) return res.status(403).json({ error: '投票已截止！' });
 
-    if (!battle.votedIPs) battle.votedIPs = [];
-    if (battle.votedIPs.includes(userIp)) return res.status(403).json({ error: '您已经投过票了！' });
+    console.log(`[投票日志] 投票前票数: ${battle.option1.name}(${battle.option1.votes}) vs ${battle.option2.name}(${battle.option2.votes})`);
 
-     if (option === 'option1' || option === 'option2') {
-        battle[option].votes++;
-        battle.votedIPs.push(userIp);
-
-        // 删除了判断胜负的逻辑
-
+    if (option === 'option1' || option === 'option2') {
+        battle[option].votes++; // 增加票数
+        console.log(`[投票日志] 投票后票数: ${battle.option1.name}(${battle.option1.votes}) vs ${battle.option2.name}(${battle.option2.votes})`);
+        
+        console.log("[投票日志] 准备执行 writeDB 将更新写入 db.json...");
         writeDB(db);
-        // 为了安全，我们返回一个不包含敏感信息（如IP列表）的对象
-        res.json({ message: '投票成功' });
+        console.log("[投票日志] writeDB 执行完毕！");
+        
+        res.json({ message: '投票成功！' }); // 返回成功信息
     } else {
+        console.error("[投票日志] 错误：无效的投票选项 " + option);
         res.status(400).json({ error: '选项无效' });
     }
+    console.log("<<<<<<<<<< 投票接口处理结束 >>>>>>>>>>\n");
+    // ======================= 投票接口调试日志 结束 =======================
 });
 
 app.listen(PORT, () => {

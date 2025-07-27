@@ -1,20 +1,21 @@
 {
-  "eventTitle": "欢迎来到米克特兰帕大争斗第一战！",
+  "eventTitle": "欢迎来到巅峰对决！",
   "battles": [
     {
-      "id": 1753551769366,
+      "id": 1753613248396,
       "option1": {
         "name": "北极熊",
-        "image": "/uploads/option1Image-1753551769359.jpg",
-        "votes": 0
+        "image": "/uploads/option1Image-1753613248394.jpg",
+        "votes": 1
       },
       "option2": {
         "name": "空调",
-        "image": "/uploads/option2Image-1753551769361.jpg",
+        "image": "/uploads/option2Image-1753613248394.jpg",
         "votes": 0
       },
-      "winner": null,
-      "deadline": "2025-01-01T00:00:00Z"
+      "deadline": "2025-07-27T18:48",
+      "winner": "北极熊",
+      "votedIPs": []
     }
   ]
 }
