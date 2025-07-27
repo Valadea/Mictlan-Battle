@@ -1,22 +1,14 @@
-body {
-    /* 1. 设置背景图片 */
-    /* 这里的路径是相对于 style.css 文件的位置 */
-    background-image: url('images/background.jpg');
+/* public/style.css (完整替换) */
 
-    /* 2. 让图片完全覆盖整个屏幕，不重复，且居中显示 */
+body {
+    background-image: url('images/background.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    
-    /* 3. (可选，但效果很棒) 固定背景，内容滚动时背景不动，产生视差效果 */
     background-attachment: fixed;
-
-    /* 4. 设置一个备用背景色，在图片加载失败时显示 */
     background-color: #333;
-
-    /* 5. 其他原有样式保持不变 */
-    font-family: Arial, sans-serif;
-    color: #333;
+    font-family: 'Helvetica Neue', Arial, sans-serif; /* 使用更现代的字体 */
+    color: #fff; /* 将默认字体颜色改为白色以适应深色背景 */
     margin: 0;
     padding: 20px;
     text-align: center;
@@ -24,90 +16,134 @@ body {
 
 body::before {
     content: '';
-    position: fixed; /* 固定在屏幕上 */
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* 半透明的黑色遮罩，0.5代表50%的透明度 */
-    z-index: -1; /* 将遮罩放在内容后面，背景图前面 */
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: -1;
 }
 
 header h1 {
-    color: #4a4a4a;
+    color: #ffffff; /* 标题字体变为纯白色 */
+    font-size: 3em; /* 稍微增大主标题 */
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.7); /* 增加文字阴影，使其更突出 */
+}
+
+header h2 {
+    color: #f0f0f0; /* 副标题字体变为浅灰色 */
+    font-size: 1.5em; /* 增大副标题 */
+    font-weight: normal;
+    margin-top: -10px;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
 }
 
 #battles-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 30px;
+    gap: 50px; /* 显著增大对战卡片之间的间距 */
     margin-bottom: 40px;
 }
 
 .battle {
-    background-color: rgba(255, 255, 255, 0.9); /* 90%不透明的白色背景 */
-    color: #333; /* 确保卡片内的文字是深色的 */
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    padding: 20px;
+    /* 移除 battle 自身的背景和边框，让其成为一个透明的容器 */
+    background-color: transparent; 
+    box-shadow: none; 
+    border: none;
+
+    padding: 0; /* 移除内边距，因为我们将把它应用到子元素上 */
     width: 90%;
-    max-width: 600px;
-    position: relative; 
+    max-width: 800px; /* 增大卡片的最大宽度以容纳更大的内容 */
+    position: relative;
 }
 
 .battle-options {
     display: flex;
     justify-content: space-around;
-    align-items: center;
+    align-items: stretch; /* 让两个选项高度一致 */
     gap: 20px;
 }
 
+/* === 这是本次修改的核心部分 === */
 .option {
+    /* 1. 为每个选项添加独立的半透明背景 */
+    background-color: rgba(30, 30, 30, 0.6); /* 半透明的深灰色，您可以按需修改 */
+    
+    /* 2. 增加内边距和圆角，使其看起来像卡片 */
+    padding: 25px;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1); /* 添加一个微妙的亮色边框 */
+    
+    /* 3. 增加过渡效果，让鼠标悬停时更平滑 */
+    transition: all 0.3s ease;
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     text-align: center;
-    width: 45%;
+    width: 48%; /* 稍微增大宽度 */
+}
+
+.option:hover {
+    transform: translateY(-5px); /* 鼠标悬停时轻微上浮 */
+    background-color: rgba(50, 50, 50, 0.7); /* 悬停时背景色加深 */
 }
 
 .option img {
+    /* 4. 显著放大图片 */
     max-width: 100%;
-    height: 200px;
+    height: 350px; /* 大幅增加图片高度 */
     object-fit: cover;
-    border-radius: 8px;
-    border: 3px solid #eee;
+    border-radius: 10px; /* 调整圆角以匹配新的卡片 */
+    border: 3px solid rgba(255, 255, 255, 0.2); /* 边框也使用半透明色 */
 }
 
 .option h3 {
-    margin: 10px 0;
+    /* 5. 显著放大文字 */
+    font-size: 2em; /* 大幅增加文字大小 */
+    margin: 20px 0;
+    color: #fff; /* 确保文字是白色 */
 }
+/* === 核心部分结束 === */
+
 
 .option button {
     background-color: #5c67f2;
     color: white;
     border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
+    padding: 15px 25px; /* 增大按钮 */
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 1.1em; /* 增大按钮文字 */
     transition: background-color 0.3s;
+    margin-top: 15px; /* 增加按钮和票数之间的间距 */
 }
 
-.option button:hover {
+.option button:disabled {
+    background-color: #555;
+    cursor: not-allowed;
+}
+
+.option button:hover:not(:disabled) {
     background-color: #4a54e1;
 }
 
 .vs {
-    font-size: 2em;
+    font-size: 3em; /* 增大 VS 文字 */
     font-weight: bold;
     color: #ff4757;
+    align-self: center; /* 垂直居中 */
+    text-shadow: 2px 2px 4px #000;
 }
 
 .results {
-    margin-top: 20px;
-    font-size: 1.2em;
-}
-
-.results p {
-    margin: 5px 0;
+    margin-top: 25px;
+    font-size: 1.5em; /* 增大结果区域的文字 */
+    background-color: rgba(0,0,0,0.5);
+    padding: 10px;
+    border-radius: 8px;
 }
 
 .winner {
@@ -117,7 +153,12 @@ header h1 {
     margin-top: 15px;
 }
 
-/* 管理员后台样式 */
+.countdown {
+    color: #feca57; /* 倒计时使用醒目的黄色 */
+}
+
+/* --- 管理员和页脚样式保持不变 --- */
+
 .admin-panel {
     background-color: #fff;
     padding: 20px;
@@ -126,77 +167,39 @@ header h1 {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     max-width: 500px;
     text-align: left;
+    color: #333; /* 管理员面板内文字恢复为深色 */
 }
 
-.admin-panel h2 {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.form-group {
-    margin-bottom: 15px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
-}
-
+.admin-panel h2, .admin-panel h3 { text-align: center; margin-bottom: 20px; }
+.form-group { margin-bottom: 15px; }
+.form-group label { display: block; margin-bottom: 5px; }
 .form-group input[type="text"],
-.form-group input[type="file"] {
-    width: 100%;
-    padding: 8px;
-    box-sizing: border-box;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+.form-group input[type="file"],
+.form-group input[type="datetime-local"] {
+    width: 100%; padding: 8px; box-sizing: border-box;
+    border: 1px solid #ddd; border-radius: 4px;
 }
-
 .admin-panel button {
-    width: 100%;
-    padding: 12px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
+    width: 100%; padding: 12px; color: white; border: none;
+    border-radius: 5px; cursor: pointer; font-size: 16px;
 }
-
-.admin-panel button:hover {
-    background-color: #218838;
-}
-
-hr {
-    border: 1px solid #eee;
-    margin: 40px 0;
-}
-
-.remove-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background-color: #ff4757;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    cursor: pointer;
-    font-weight: bold;
-}
-.battle {
-    position: relative; /* 这是为了让 remove-btn 的 absolute 定位生效 */
-}
-
+form button[type="submit"] { background-color: #28a745; }
+form button[type="submit"]:hover { background-color: #218838; }
+.admin-section button { background-color: #007bff; }
+.admin-section button:hover { background-color: #0056b3; }
 .admin-section { margin-bottom: 20px; }
 .admin-divider { border: 1px solid #ddd; margin: 30px 0; }
 
+.remove-btn {
+    position: absolute; top: -10px; right: -10px;
+    background-color: #ff4757; color: white; border: none;
+    border-radius: 50%; width: 35px; height: 35px;
+    cursor: pointer; font-weight: bold; font-size: 1.2em;
+    z-index: 100;
+}
 .page-footer {
-    position: fixed; /* 固定在屏幕上 */
-    bottom: 10px;    /* 离底部10像素 */
-    left: 10px;      /* 离左边10像素 */
-    font-size: 12px; /* 小字体 */
-    color: #f0f0f0;   /* 浅灰色，适合深色背景 */
-    text-shadow: 1px 1px 2px black; /* 给文字加一点黑色描边，让它在任何背景上都清晰可见 */
-    z-index: 1000;   /* 确保它在最顶层显示 */
+    position: fixed; bottom: 10px; left: 10px;
+    font-size: 12px; color: #f0f0f0;
+    text-shadow: 1px 1px 2px black;
+    z-index: 1000;
 }
