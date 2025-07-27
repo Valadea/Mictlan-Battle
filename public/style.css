@@ -63,7 +63,7 @@ header h2 {
     display: flex;
     justify-content: space-around;
     align-items: stretch; /* 让两个选项高度一致 */
-    gap: 60px;
+    gap: 120px;
 }
 
 /* === 这是本次修改的核心部分 === */
@@ -94,7 +94,7 @@ header h2 {
 .option img {
     /* 4. 显著放大图片 */
     max-width: 100%;
-    height: 280px; /* 大幅增加图片高度 */
+    height: 240px; /* 大幅增加图片高度 */
     object-fit: cover;
     border-radius: 10px; /* 调整圆角以匹配新的卡片 */
     border: 3px solid rgba(255, 255, 255, 0.2); /* 边框也使用半透明色 */
@@ -202,4 +202,60 @@ form button[type="submit"]:hover { background-color: #218838; }
     font-size: 12px; color: #f0f0f0;
     text-shadow: 1px 1px 2px black;
     z-index: 1000;
+}
+
+/* =========================================== */
+/* ===         手机端响应式适配          === */
+/* =========================================== */
+
+/* 当屏幕宽度小于或等于 768px 时，应用以下样式 */
+@media (max-width: 768px) {
+
+    /* --- 整体布局调整 --- */
+    body {
+        padding: 10px; /* 减小页面边距 */
+    }
+
+    /* --- 标题字体缩小 --- */
+    header h1 {
+        font-size: 2.2em;
+    }
+    header h2 {
+        font-size: 1.2em;
+    }
+
+    /* --- 核心：改变对战布局 --- */
+    .battle-options {
+        flex-direction: column; /* 这是最重要的！将水平排列改为垂直堆叠 */
+        gap: 20px; /* 减小垂直堆叠时的间距 */
+    }
+
+    .option {
+        width: 100%; /* 既然是垂直堆叠，每个选项都应该占满100%的宽度 */
+        padding: 15px;
+    }
+
+    .vs {
+        display: none; /* 在垂直布局中，"VS"文字显得多余，直接隐藏 */
+    }
+
+    /* --- 调整内容尺寸 --- */
+    .option img {
+        height: 220px; /* 在手机上可以适当降低图片高度 */
+    }
+
+    .option h3 {
+        font-size: 1.5em; /* 缩小选项标题 */
+        margin: 15px 0;
+    }
+    
+    .results {
+        font-size: 1.2em;
+    }
+
+    /* --- 适配管理员面板 --- */
+    .admin-panel {
+        width: 95%; /* 让管理员面板不要超出屏幕 */
+        padding: 15px;
+    }
 }
