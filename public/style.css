@@ -53,7 +53,7 @@ header h2 {
     border: none;
     padding: 0;
     width: 90%;
-    max-width: 900px; /* <<< 电脑端修改点：从 800px 增大到 900px，让整体更宽 */
+    max-width: 950px; /* <<< 电脑端修改点：从 800px 增大到 900px，让整体更宽 */
     position: relative;
 }
 
@@ -177,11 +177,11 @@ header h2 {
     }
 
     .option img {
-        height: 160px; /* <<< 手机端修改点：从 220px 进一步降低到 160px */
+        height: 150px; /* <<< 手机端修改点：从 220px 进一步降低到 160px */
     }
 
     .option h3 {
-        font-size: 1.2em; /* <<< 手机端修改点：从 1.5em 进一步降低到 1.2em */
+        font-size: 1.1em; /* <<< 手机端修改点：从 1.5em 进一步降低到 1.2em */
         margin: 15px 0;
     }
     
