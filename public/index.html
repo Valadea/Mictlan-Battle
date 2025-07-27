@@ -9,7 +9,9 @@
 <body>
 
     <header>
-        <h1>巅峰对决</h1>
+        <h1>米克特兰帕大争斗！</h1>
+        <h2 id="event-title"></h2> <!-- 新增的活动标题位置 -->
+
     </header>
 
     <main id="battles-container">
@@ -25,6 +27,22 @@
 <section class="admin-panel" id="admin-panel" style="display:none;">
     <h2>管理员后台</h2>
     <form action="/api/admin/battles" method="POST" enctype="multipart/form-data">
+    <div class="admin-section">
+        <h3>修改活动标题</h3>
+        <div class="form-group">
+            <input type="text" id="new-title-input" placeholder="例如：第一战">
+        </div>
+        <button onclick="updateEventTitle()">更新标题</button>
+    </div>
+    <hr class="admin-divider">
+    <!-- 区域结束 -->
+    
+    <div class="admin-section">
+        <h3>创建新的对战</h3>
+        <form action="/api/admin/battles" method="POST" enctype="multipart/form-data">
+            <!-- ... 原有的创建对战表单 ... -->
+        </form>
+    </div>
         <h3>创建新的对战</h3>
         
         <input type="hidden" name="adminPassword" id="admin-password-input">
@@ -49,10 +67,14 @@
             <label for="deadline">投票截止时间:</label>
             <input type="datetime-local" id="deadline" name="deadline" required>
         </div>
+        
         <button type="submit">创建对战</button>
     </form>
     </section>
 
     <script src="app.js"></script>
+    <footer class="page-footer">
+        画师ID：AU，图片仅作为宣传使用
+    </footer>
 </body>
 </html>
