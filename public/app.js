@@ -21,68 +21,58 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const loadBattles = async () => {
-        activeTimers.forEach(timerId => clearInterval(timerId));
-        activeTimers = [];
-
-        try {
-            // 注意：API地址已改为 /api/data
-            const response = await fetch('/api/data');
-            const data = await response.json();
-            const battles = data.battles;
-
-            // 更新活动标题
-            eventTitleElement.textContent = data.eventTitle;
+    // ... 前面代码不变 ...
+    try {
+        // ...
+        battles.forEach(battle => {
+            const battleElement = document.createElement('div');
+            battleElement.classList.add('battle');
+            battleElement.setAttribute('id', `battle-${battle.id}`);
             
-            battlesContainer.innerHTML = '';
-            if (battles.length === 0) {
-                battlesContainer.innerHTML = '<p>暂无对战，请管理员创建。</p>';
-                return;
-            }
+            const now = new Date();
+            // ================== 修改开始 ==================
+            // 确保 battle.deadline 存在且有效，否则认为它未过期
+            const deadline = battle.deadline ? new Date(battle.deadline) : null;
+            const isExpired = deadline ? now > deadline : false; 
+            // ================== 修改结束 ==================
 
-            battles.forEach(battle => {
-                const battleElement = document.createElement('div');
-                battleElement.classList.add('battle');
-                battleElement.setAttribute('id', `battle-${battle.id}`);
-                
-                const now = new Date();
-                const deadline = new Date(battle.deadline);
-                const isExpired = now > deadline;
-                let resultDisplay = isExpired ? `<p class="winner">最终胜者是: ${battle.winner || '平局'}</p>` : `<div class="countdown" id="timer-${battle.id}">计算剩余时间...</div>`;
+            let resultDisplay = isExpired ? `<p class="winner">最终胜者是: ${battle.winner || '平局'}</p>` : `<div class="countdown" id="timer-${battle.id}">计算剩余时间...</div>`;
 
-                battleElement.innerHTML = `
-                    ${isAdminLoggedIn ? `<button class="remove-btn" onclick="removeBattle(${battle.id})">❌ 移除对战</button>` : ''}
-                    <div class="battle-options">
-                        <div class="option">
-                            <h3>${battle.option1.name}</h3>
-                            <img src="${battle.option1.image}" alt="${battle.option1.name}">
-                            <button onclick="vote(${battle.id}, 'option1')" ${isExpired ? 'disabled' : ''}>投一票</button>
-                            <p class="votes">票数: ${battle.option1.votes}</p>
-                        </div>
-                        <div class="vs">VS</div>
-                        <div class="option">
-                            <h3>${battle.option2.name}</h3>
-                            <img src="${battle.option2.image}" alt="${battle.option2.name}">
-                            <button onclick="vote(${battle.id}, 'option2')" ${isExpired ? 'disabled' : ''}>投一票</button>
-                            <p class="votes">票数: ${battle.option2.votes}</p>
-                        </div>
+            battleElement.innerHTML = `
+                ${isAdminLoggedIn ? `<button class="remove-btn" onclick="removeBattle(${battle.id})">❌ 移除对战</button>` : ''}
+                <div class="battle-options">
+                    <div class="option">
+                        <h3>${battle.option1.name}</h3>
+                        <img src="${battle.option1.image}" alt="${battle.option1.name}">
+                        <button onclick="vote(${battle.id}, 'option1')" ${isExpired ? 'disabled' : ''}>投一票</button>
+                        <p class="votes">票数: ${battle.option1.votes}</p>
                     </div>
-                    <div class="results">${resultDisplay}</div>
-                `;
-                battlesContainer.appendChild(battleElement);
+                    <div class="vs">VS</div>
+                    <div class="option">
+                        <h3>${battle.option2.name}</h3>
+                        <img src="${battle.option2.image}" alt="${battle.option2.name}">
+                        <button onclick="vote(${battle.id}, 'option2')" ${isExpired ? 'disabled' : ''}>投一票</button>
+                        <p class="votes">票数: ${battle.option2.votes}</p>
+                    </div>
+                </div>
+                <div class="results">${resultDisplay}</div>
+            `;
+            battlesContainer.appendChild(battleElement);
 
-                if (!isExpired) {
-                    const timerElement = document.getElementById(`timer-${battle.id}`);
-                    const timerId = setInterval(() => {
-                        const timeLeft = deadline - new Date();
-                        timerElement.innerHTML = `剩余时间: ${formatTimeLeft(timeLeft)}`;
-                        if (timeLeft < 0) {
-                            clearInterval(timerId);
-                            loadBattles(); 
-                        }
-                    }, 1000);
-                    activeTimers.push(timerId);
-                }
-            });
+            // 如果未过期且 deadline 有效
+            if (!isExpired && deadline) {
+                const timerElement = document.getElementById(`timer-${battle.id}`);
+                const timerId = setInterval(() => {
+                    const timeLeft = deadline - new Date();
+                    timerElement.innerHTML = `剩余时间: ${formatTimeLeft(timeLeft)}`;
+                    if (timeLeft < 0) {
+                        clearInterval(timerId);
+                        loadBattles(); 
+                    }
+                }, 1000);
+                activeTimers.push(timerId);
+            }
+        });
         } catch (error) {
             console.error('加载数据失败:', error);
             battlesContainer.innerHTML = '<p>无法加载数据，请稍后再试。</p>';
