@@ -7,8 +7,8 @@ body {
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-color: #333;
-    font-family: 'Helvetica Neue', Arial, sans-serif; /* 使用更现代的字体 */
-    color: #fff; /* 将默认字体颜色改为白色以适应深色背景 */
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    color: #fff;
     margin: 0;
     padding: 20px;
     text-align: center;
@@ -26,14 +26,14 @@ body::before {
 }
 
 header h1 {
-    color: #ffffff; /* 标题字体变为纯白色 */
-    font-size: 3em; /* 稍微增大主标题 */
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.7); /* 增加文字阴影，使其更突出 */
+    color: #ffffff;
+    font-size: 3em;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
 }
 
 header h2 {
-    color: #f0f0f0; /* 副标题字体变为浅灰色 */
-    font-size: 1.5em; /* 增大副标题 */
+    color: #f0f0f0;
+    font-size: 1.5em;
     font-weight: normal;
     margin-top: -10px;
     text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
@@ -43,82 +43,69 @@ header h2 {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 50px; /* 显著增大对战卡片之间的间距 */
+    gap: 50px;
     margin-bottom: 40px;
 }
 
 .battle {
-    /* 移除 battle 自身的背景和边框，让其成为一个透明的容器 */
     background-color: transparent; 
     box-shadow: none; 
     border: none;
-
-    padding: 0; /* 移除内边距，因为我们将把它应用到子元素上 */
+    padding: 0;
     width: 90%;
-    max-width: 800px; /* 增大卡片的最大宽度以容纳更大的内容 */
+    max-width: 1000px; /* <<< 电脑端修改点：从 800px 增大到 900px，让整体更宽 */
     position: relative;
 }
 
 .battle-options {
     display: flex;
     justify-content: space-around;
-    align-items: stretch; /* 让两个选项高度一致 */
-    gap: 120px;
+    align-items: stretch;
+    gap: 40px;
 }
 
-/* === 这是本次修改的核心部分 === */
 .option {
-    /* 1. 为每个选项添加独立的半透明背景 */
-    background-color: rgba(30, 30, 30, 0.6); /* 半透明的深灰色，您可以按需修改 */
-    
-    /* 2. 增加内边距和圆角，使其看起来像卡片 */
+    background-color: rgba(30, 30, 30, 0.6);
     padding: 25px;
     border-radius: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.1); /* 添加一个微妙的亮色边框 */
-    
-    /* 3. 增加过渡效果，让鼠标悬停时更平滑 */
+    border: 1px solid rgba(255, 255, 255, 0.1);
     transition: all 0.3s ease;
-    
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     text-align: center;
-    width: 48%; /* 稍微增大宽度 */
+    width: 48%;
 }
 
 .option:hover {
-    transform: translateY(-5px); /* 鼠标悬停时轻微上浮 */
-    background-color: rgba(50, 50, 50, 0.7); /* 悬停时背景色加深 */
+    transform: translateY(-5px);
+    background-color: rgba(50, 50, 50, 0.7);
 }
 
 .option img {
-    /* 4. 显著放大图片 */
     max-width: 100%;
-    height: 240px; /* 大幅增加图片高度 */
+    height: 280px;
     object-fit: cover;
-    border-radius: 10px; /* 调整圆角以匹配新的卡片 */
-    border: 3px solid rgba(255, 255, 255, 0.2); /* 边框也使用半透明色 */
+    border-radius: 10px;
+    border: 3px solid rgba(255, 255, 255, 0.2);
 }
 
 .option h3 {
-    /* 5. 显著放大文字 */
-    font-size: 2em; /* 大幅增加文字大小 */
+    font-size: 2em;
     margin: 20px 0;
-    color: #fff; /* 确保文字是白色 */
+    color: #fff;
 }
-/* === 核心部分结束 === */
-
 
 .option button {
     background-color: #5c67f2;
     color: white;
     border: none;
-    padding: 15px 25px; /* 增大按钮 */
+    padding: 15px 25px;
     border-radius: 8px;
     cursor: pointer;
-    font-size: 1.1em; /* 增大按钮文字 */
+    font-size: 1.1em;
     transition: background-color 0.3s;
-    margin-top: 15px; /* 增加按钮和票数之间的间距 */
+    margin-top: 15px;
 }
 
 .option button:disabled {
@@ -131,16 +118,16 @@ header h2 {
 }
 
 .vs {
-    font-size: 3em; /* 增大 VS 文字 */
+    font-size: 3em;
     font-weight: bold;
     color: #ff4757;
-    align-self: center; /* 垂直居中 */
+    align-self: center;
     text-shadow: 2px 2px 4px #000;
 }
 
 .results {
     margin-top: 25px;
-    font-size: 1.5em; /* 增大结果区域的文字 */
+    font-size: 1.5em;
     background-color: rgba(0,0,0,0.5);
     padding: 10px;
     border-radius: 8px;
@@ -154,27 +141,70 @@ header h2 {
 }
 
 .countdown {
-    color: #feca57; /* 倒计时使用醒目的黄色 */
+    color: #feca57;
 }
 
-/* --- 管理员和页脚样式保持不变 --- */
 
+/* =========================================== */
+/* ===         手机端响应式适配          === */
+/* =========================================== */
+
+@media (max-width: 768px) {
+
+    body {
+        padding: 10px;
+    }
+
+    header h1 {
+        font-size: 2.2em;
+    }
+    header h2 {
+        font-size: 1.2em;
+    }
+
+    .battle-options {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .option {
+        width: 100%;
+        padding: 15px;
+    }
+
+    .vs {
+        display: none;
+    }
+
+    .option img {
+        height: 180px; /* <<< 手机端修改点：从 220px 进一步降低到 180px */
+    }
+
+    .option h3 {
+        font-size: 1.4em; /* <<< 手机端修改点：从 1.5em 进一步降低到 1.4em */
+        margin: 15px 0;
+    }
+    
+    .results {
+        font-size: 1.2em;
+    }
+
+    .admin-panel {
+        width: 95%;
+        padding: 15px;
+    }
+}
+
+/* --- 其他样式保持不变 --- */
 .admin-panel {
-    background-color: #fff;
-    padding: 20px;
-    margin: 20px auto;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    max-width: 500px;
-    text-align: left;
-    color: #333; /* 管理员面板内文字恢复为深色 */
+    background-color: #fff; padding: 20px; margin: 20px auto;
+    border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    max-width: 500px; text-align: left; color: #333;
 }
-
 .admin-panel h2, .admin-panel h3 { text-align: center; margin-bottom: 20px; }
 .form-group { margin-bottom: 15px; }
 .form-group label { display: block; margin-bottom: 5px; }
-.form-group input[type="text"],
-.form-group input[type="file"],
+.form-group input[type="text"], .form-group input[type="file"],
 .form-group input[type="datetime-local"] {
     width: 100%; padding: 8px; box-sizing: border-box;
     border: 1px solid #ddd; border-radius: 4px;
@@ -202,60 +232,4 @@ form button[type="submit"]:hover { background-color: #218838; }
     font-size: 12px; color: #f0f0f0;
     text-shadow: 1px 1px 2px black;
     z-index: 1000;
-}
-
-/* =========================================== */
-/* ===         手机端响应式适配          === */
-/* =========================================== */
-
-/* 当屏幕宽度小于或等于 768px 时，应用以下样式 */
-@media (max-width: 768px) {
-
-    /* --- 整体布局调整 --- */
-    body {
-        padding: 10px; /* 减小页面边距 */
-    }
-
-    /* --- 标题字体缩小 --- */
-    header h1 {
-        font-size: 2.2em;
-    }
-    header h2 {
-        font-size: 1.2em;
-    }
-
-    /* --- 核心：改变对战布局 --- */
-    .battle-options {
-        flex-direction: column; /* 这是最重要的！将水平排列改为垂直堆叠 */
-        gap: 20px; /* 减小垂直堆叠时的间距 */
-    }
-
-    .option {
-        width: 100%; /* 既然是垂直堆叠，每个选项都应该占满100%的宽度 */
-        padding: 15px;
-    }
-
-    .vs {
-        display: none; /* 在垂直布局中，"VS"文字显得多余，直接隐藏 */
-    }
-
-    /* --- 调整内容尺寸 --- */
-    .option img {
-        height: 220px; /* 在手机上可以适当降低图片高度 */
-    }
-
-    .option h3 {
-        font-size: 1.5em; /* 缩小选项标题 */
-        margin: 15px 0;
-    }
-    
-    .results {
-        font-size: 1.2em;
-    }
-
-    /* --- 适配管理员面板 --- */
-    .admin-panel {
-        width: 95%; /* 让管理员面板不要超出屏幕 */
-        padding: 15px;
-    }
 }
