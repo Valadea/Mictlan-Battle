@@ -40,35 +40,49 @@ const writeDB = (data) => {
 // --- API 路由 ---
 
 // GET /api/data - 获取所有数据（对战列表+活动标题）
+// server.js (替换此部分)
+
 app.get('/api/data', (req, res) => {
     const db = readDB();
     const now = new Date();
+    let dbWasModified = false; // 标记数据库是否被修改
 
-    const publicBattles = db.battles.map(battle => {
-        const battleDeadline = new Date(battle.deadline);
-        const isExpired = now > battleDeadline;
+    // 遍历所有对战，检查是否需要“结算”
+    db.battles.forEach(battle => {
+        // 首先，确保 deadline 存在，且当前时间已超过截止时间
+        const isExpired = battle.deadline && (now > new Date(battle.deadline));
 
-        // 创建一个 battle 的副本以进行修改
-        const battleData = { ...battle };
-
-        if (isExpired) {
-            // 对战已截止，此时根据最终票数决定胜者
-            if (battleData.option1.votes > battleData.option2.votes) {
-                battleData.winner = battleData.option1.name;
-            } else if (battleData.option2.votes > battleData.option1.votes) {
-                battleData.winner = battleData.option2.name;
+        // 如果已截止，并且胜者还未被记录（winner is null），则进行结算
+        if (isExpired && battle.winner === null) {
+            console.log(`结算对战 ID: ${battle.id}`); // 在服务器后台打印日志，方便调试
+            if (battle.option1.votes > battle.option2.votes) {
+                battle.winner = battle.option1.name;
+            } else if (battle.option2.votes > battle.option1.votes) {
+                battle.winner = battle.option2.name;
             } else {
-                battleData.winner = '平局';
+                battle.winner = '平局';
             }
-        } else {
-            // 对战未截止，隐藏胜者信息
-            battleData.winner = null;
+            dbWasModified = true; // 标记需要将更新后的胜者信息写回文件
         }
-        
-        // 移除敏感信息后再返回
-        delete battleData.votedIPs;
-        return battleData;
     });
+
+    // 如果在上面的循环中结算了任何对战，就将更新写回 db.json
+    if (dbWasModified) {
+        console.log('检测到新的结算，正在更新 db.json...');
+        writeDB(db);
+    }
+
+    // 准备要发给客户端的公开数据（移除敏感信息）
+    const publicBattles = db.battles.map(battle => {
+        const { votedIPs, ...publicData } = battle;
+        return publicData;
+    });
+
+    res.json({
+        eventTitle: db.eventTitle,
+        battles: publicBattles
+    });
+});
 
 
     // 将活动标题和对战列表一起返回

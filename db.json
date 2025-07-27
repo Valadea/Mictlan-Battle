@@ -13,7 +13,8 @@
         "image": "/uploads/option2Image-1753551769361.jpg",
         "votes": 0
       },
-      "winner": null
+      "winner": null,
+      "deadline": "2025-01-01T00:00:00Z"
     }
   ]
 }
